@@ -12,6 +12,8 @@ class Game {
         int SCREEN_HEIGHT;
         bool running;
         Scene scene;
+        double VAngle;
+        double speed;
 
     public:
         Game();
@@ -21,6 +23,7 @@ class Game {
         void update();
         void render();
         void clean();
+        int getFPS();
 };
 
 #endif /* Game_h */

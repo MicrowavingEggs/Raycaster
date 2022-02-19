@@ -1,5 +1,6 @@
 #ifndef Wall_h
 #define Wall_h
+#include "math.h"
 
 class Wall {
     private:
@@ -14,6 +15,7 @@ class Wall {
         Wall(double x1,double x2,double z1,double z2,double h);
         ~Wall();
         void rotate(double angle);
+        void translate(double x,double z);
         double getX1();
         double getX2();
         double getZ1();

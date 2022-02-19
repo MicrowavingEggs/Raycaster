@@ -10,6 +10,8 @@ class Scene {
         Scene();
         ~Scene();
         Wall getWall();
+        void rotate(double angle);
+        void translate(double x, double z);
 };
 
 

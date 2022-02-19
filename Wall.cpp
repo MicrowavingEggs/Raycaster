@@ -17,7 +17,25 @@ Wall::~Wall(){
 }
 
 void Wall::rotate(double angle){
-    // TODO (rotate the points from  )
+    double tx1;
+    double tz1;
+    double tx2;
+    double tz2;
+    tx1 = x1*cos(angle) + z1*sin(angle);
+    tz1 = x1*sin(-angle) + z1*cos(angle);
+    tx2 = x2*cos(angle) + z2*sin(angle);
+    tz2 = x2*sin(-angle) + z2*cos(angle);
+    x1 = tx1;
+    x2 = tx2;
+    z1 = tz1;
+    z2 = tz2;
+}
+
+void Wall::translate(double x, double z){
+    x1 += x;
+    x2 += x;
+    z1 += z;
+    z2 += z;
 }
 
 double Wall::getHeight(){
