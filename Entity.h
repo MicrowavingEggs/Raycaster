@@ -7,6 +7,8 @@ class Entity {
         double px;
         double py;
         double pz;
+        double angle;
+        int jumpingState;
     
     public:
         Entity();
@@ -14,15 +16,21 @@ class Entity {
         ~Entity();
         int getHp();
         double getPx();
-        double getPx();
-        double getPx();
+        double getPy();
+        double getPz();
+        double getAngle();
+        int getJumpingState();
+        void incrJumpingState();
+        void resetJump();
         void setHp();
         void setPx();
         void setPy();
         void setPz();
+        void setAngle();
         void loseHp(int deltaHp);
         bool isDead();
         void move(double deltaX,double deltaY, double deltaZ);
+        void rotate(double deltaAngle);
 };
 
 

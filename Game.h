@@ -2,6 +2,7 @@
 #define Game_h
 #include <SDL2/SDL.h>
 #include "Scene.h"
+#include "Entity.h"
 
 class Game {
     private :
@@ -14,6 +15,7 @@ class Game {
         Scene scene;
         double VAngle;
         double speed;
+        Entity player;
 
     public:
         Game();
