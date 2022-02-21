@@ -13,6 +13,7 @@ Game::Game(){
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	player = Entity();
     scene = Scene();
+	minimapOn = false;
 }
 
 Game::~Game(){
@@ -24,6 +25,19 @@ Game::~Game(){
 bool Game::isRunning(){
     return running;
 }
+
+bool Game::drawMinimap(){
+	return minimapOn;
+}
+
+void Game::enableMinimap(){
+	minimapOn = true;
+}
+
+void Game::disableMinimap(){
+	minimapOn = false;
+}
+
 void Game::handleEvents(){
     SDL_Event event;
 		SDL_PollEvent(&event);
@@ -45,12 +59,12 @@ void Game::update(){
 		double z = player.getPz();
 		if (state[SDL_SCANCODE_UP])
 		{
-			scene.translate(-speed,0,-speed);
+			scene.translate(0,0,-speed);
 		}
 
 		if (state[SDL_SCANCODE_DOWN])
 		{
-			scene.translate(speed,0,speed);
+			scene.translate(0,0,speed);
 		}
 
 		if (state[SDL_SCANCODE_Q])
@@ -88,6 +102,14 @@ void Game::update(){
 				player.resetJump();			
 			}
 		}
+		if (state[SDL_SCANCODE_TAB]){
+			if (minimapOn){
+				disableMinimap();
+			}
+			else{
+				enableMinimap();
+			}
+		}
 }
 
 void Game::render(){
@@ -106,6 +128,9 @@ void Game::render(){
 			SDL_RenderDrawLineF(renderer, x1,ZOffset - y1/2., x2,ZOffset - y2/2.);
 			SDL_RenderDrawLineF(renderer, x1,ZOffset - y1/2., x1,ZOffset + y1/2.);
 			SDL_RenderDrawLineF(renderer, x2,ZOffset - y2/2., x2,ZOffset + y2/2.);
+			if (drawMinimap()){
+				SDL_RenderDrawLineF(renderer,800+(x1/4.),450 + (wall.getZ1()/4.),800 + (x2/4.),450 + (wall.getZ2()/4.));
+			}
 			//if (x1 > x2){
 			//	for(int x{(int) x1}; x < x2; ++x){
 			//		double Zdepth = wall.ZDepth(x,slope);

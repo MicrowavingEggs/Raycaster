@@ -16,11 +16,15 @@ class Game {
         double VAngle;
         double speed;
         Entity player;
+        bool minimapOn;
 
     public:
         Game();
         ~Game();
         bool isRunning();
+        bool drawMinimap();
+        void enableMinimap();
+        void disableMinimap();
         void handleEvents();
         void update();
         void render();
