@@ -52,8 +52,8 @@ double Wall::slope(){
 }
 
 double Wall::ZDepth(double x, double slope) {
-    if (z1+slope*x>0.001){
-        return height/(z1 + slope*x);
+    if (z1+slope*(x-x1)>0.001){
+        return height/(z1 + slope*(x-x1));
     }
     else{
         return 5000;

@@ -4,6 +4,8 @@ Scene::Scene(){
     wall.push_back(Wall(0,150,10,40,1500));
     wall.push_back(Wall(150,900,40,150,1500));    
     wall.push_back(Wall(900,1600,150,30,1500));
+    wall.push_back(Wall(1600,400,30,-40,1500));
+    wall.push_back(Wall(400,0,-40,10,1500));
 }
 
 Scene::~Scene(){

@@ -129,7 +129,7 @@ void Game::render(){
 			SDL_RenderDrawLineF(renderer, x1,ZOffset - y1/2., x1,ZOffset + y1/2.);
 			SDL_RenderDrawLineF(renderer, x2,ZOffset - y2/2., x2,ZOffset + y2/2.);
 			if (drawMinimap()){
-				SDL_RenderDrawLineF(renderer,800+(x1/4.),450 + (wall.getZ1()/4.),800 + (x2/4.),450 + (wall.getZ2()/4.));
+				SDL_RenderDrawLineF(renderer,800 - (x1/4.),450 + (wall.getZ1()/4.),800 - (x2/4.),450 + (wall.getZ2()/4.));
 			}
 			//if (x1 > x2){
 			//	for(int x{(int) x1}; x < x2; ++x){
