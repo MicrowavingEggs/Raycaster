@@ -8,7 +8,7 @@ Game::Game(){
     SCREEN_HEIGHT = 900;
     FPS = 60;
     VAngle = M_PI/((float) (1000));
-    speed = 20/((float) FPS);
+    speed = 80/((float) FPS);
     window = SDL_CreateWindow("Rasterizer", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	player = Entity();

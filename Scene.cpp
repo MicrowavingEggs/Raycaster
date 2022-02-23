@@ -1,11 +1,11 @@
 #include "Scene.h"
 
 Scene::Scene(){
-    wall.push_back(Wall(0,150,10,40,1500));
-    wall.push_back(Wall(150,900,40,150,1500));    
-    wall.push_back(Wall(900,1600,150,30,1500));
-    wall.push_back(Wall(1600,400,30,-40,1500));
-    wall.push_back(Wall(400,0,-40,10,1500));
+    wall.push_back(Wall(0,150,100,400,15000));
+    wall.push_back(Wall(150,900,400,1500,15000));    
+    wall.push_back(Wall(900,1600,1500,300,15000));
+    wall.push_back(Wall(1600,400,300,-400,15000));
+    wall.push_back(Wall(400,0,-400,100,15000));
 }
 
 Scene::~Scene(){
