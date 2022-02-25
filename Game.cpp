@@ -69,12 +69,12 @@ void Game::update(){
 
 		if (state[SDL_SCANCODE_Q])
 		{
-			scene.translate(-speed,0,0);
+			scene.translate(speed,0,0);
 		}
 
 		if (state[SDL_SCANCODE_E])
 		{
-			scene.translate(speed,0,0);
+			scene.translate(-speed,0,0);
 		}
 
 		if (state[SDL_SCANCODE_LEFT])
@@ -90,12 +90,8 @@ void Game::update(){
 		if (state[SDL_SCANCODE_SPACE])
 		{
 			int playerJumpingState{player.getJumpingState()};
-			if(playerJumpingState < 30){
-				ZOffset += speed;
-				player.incrJumpingState();
-			}
-			else if (playerJumpingState < 60){
-				ZOffset -= speed;
+			if (playerJumpingState < 60){
+				ZOffset = 450 + 80*cos((M_PI/2.) + 2*M_PI*playerJumpingState/59.);
 				player.incrJumpingState();
 			}
 			else{
