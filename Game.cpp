@@ -116,33 +116,46 @@ void Game::render(){
     // For elt in scene, render it.
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
         SDL_RenderClear(renderer);
-        SDL_SetRenderDrawColor(renderer,255,0,0,255);
 		for(int i{0}; i < scene.wallCount(); ++i){
 			Wall wall = scene.getWall(i);
 			double slope = wall.slope();
+			double wallHeight = wall.getHeight();
 			double x1 = wall.getX1();
 			double x2 = wall.getX2();
 			double y1 = wall.ZDepth(x1, slope);
 			double y2 = wall.ZDepth(x2, slope);
+			SDL_SetRenderDrawColor(renderer,255,0,0,255);
 			SDL_RenderDrawLineF(renderer, x1,ZOffset + y1/2., x2,ZOffset + y2/2.);
 			SDL_RenderDrawLineF(renderer, x1,ZOffset - y1/2., x2,ZOffset - y2/2.);
 			SDL_RenderDrawLineF(renderer, x1,ZOffset - y1/2., x1,ZOffset + y1/2.);
 			SDL_RenderDrawLineF(renderer, x2,ZOffset - y2/2., x2,ZOffset + y2/2.);
+			double slope2 = (y2-y1)/(x2-x1);
+			if (x1 > x2){
+				for(int x{(int) x2}; x < x1; ++x){
+					double Zdepth{y2 + slope2*(x-x2)};
+					SDL_SetRenderDrawColor(renderer,255,255,0,255);
+					SDL_RenderDrawLineF(renderer, x, 0, x, ZOffset - Zdepth/2.);
+					SDL_SetRenderDrawColor(renderer,255,0,0,255);
+					SDL_RenderDrawLineF(renderer, x, ZOffset - Zdepth/2., x, ZOffset + Zdepth/2.);
+					SDL_SetRenderDrawColor(renderer,0,0,255,255);
+					SDL_RenderDrawLineF(renderer, x, ZOffset + Zdepth/2., x, SCREEN_HEIGHT);
+				}
+			}
+			else{
+				for(int x{(int) x1}; x < x2; ++x){
+					double Zdepth{y1 + slope2*(x-x1)};
+					SDL_SetRenderDrawColor(renderer,255,255,0,255);
+					SDL_RenderDrawLineF(renderer, x, 0, x, ZOffset - Zdepth/2.);
+					SDL_SetRenderDrawColor(renderer,255,0,0,255);
+					SDL_RenderDrawLineF(renderer, x, ZOffset - Zdepth/2., x, ZOffset + Zdepth/2.);
+					SDL_SetRenderDrawColor(renderer,0,0,255,255);
+					SDL_RenderDrawLineF(renderer, x, ZOffset + Zdepth/2., x, SCREEN_HEIGHT);
+				}
+			}
 			if (drawMinimap()){
+				SDL_SetRenderDrawColor(renderer,255,255,255,255);
 				SDL_RenderDrawLineF(renderer,800 - (x1/4.),450 + (wall.getZ1()/4.),800 - (x2/4.),450 + (wall.getZ2()/4.));
 			}
-			//if (x1 > x2){
-			//	for(int x{(int) x1}; x < x2; ++x){
-			//		double Zdepth = wall.ZDepth(x,slope);
-			//		SDL_RenderDrawLineF(renderer, x, ZOffset - Zdepth/2., x, ZOffset + Zdepth/2.);
-			//	}
-			//}
-			//else{
-			//	for(int x{(int) x2}; x < x1; ++x){
-			//		double Zdepth = wall.ZDepth(x,slope);
-			//		SDL_RenderDrawLineF(renderer, x, ZOffset - Zdepth/2., x, ZOffset + Zdepth/2.);
-			//	}
-			//}
 
 		}
         SDL_RenderPresent(renderer);
