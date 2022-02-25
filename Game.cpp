@@ -124,7 +124,7 @@ void Game::render(){
 			double x2 = wall.getX2();
 			double y1 = wall.ZDepth(x1, slope);
 			double y2 = wall.ZDepth(x2, slope);
-			SDL_SetRenderDrawColor(renderer,255,0,0,255);
+			SDL_SetRenderDrawColor(renderer,(255*i)/5,255 - (255*i)/6,0,255);
 			SDL_RenderDrawLineF(renderer, x1,ZOffset + y1/2., x2,ZOffset + y2/2.);
 			SDL_RenderDrawLineF(renderer, x1,ZOffset - y1/2., x2,ZOffset - y2/2.);
 			SDL_RenderDrawLineF(renderer, x1,ZOffset - y1/2., x1,ZOffset + y1/2.);
@@ -135,7 +135,7 @@ void Game::render(){
 					double Zdepth{y2 + slope2*(x-x2)};
 					SDL_SetRenderDrawColor(renderer,255,255,0,255);
 					SDL_RenderDrawLineF(renderer, x, 0, x, ZOffset - Zdepth/2.);
-					SDL_SetRenderDrawColor(renderer,255,0,0,255);
+					SDL_SetRenderDrawColor(renderer,(255*i)/5,255 - (255*i)/6,0,255);
 					SDL_RenderDrawLineF(renderer, x, ZOffset - Zdepth/2., x, ZOffset + Zdepth/2.);
 					SDL_SetRenderDrawColor(renderer,0,0,255,255);
 					SDL_RenderDrawLineF(renderer, x, ZOffset + Zdepth/2., x, SCREEN_HEIGHT);
@@ -146,7 +146,7 @@ void Game::render(){
 					double Zdepth{y1 + slope2*(x-x1)};
 					SDL_SetRenderDrawColor(renderer,255,255,0,255);
 					SDL_RenderDrawLineF(renderer, x, 0, x, ZOffset - Zdepth/2.);
-					SDL_SetRenderDrawColor(renderer,255,0,0,255);
+					SDL_SetRenderDrawColor(renderer,(255*i)/5,255 - (255*i)/6,0,255);
 					SDL_RenderDrawLineF(renderer, x, ZOffset - Zdepth/2., x, ZOffset + Zdepth/2.);
 					SDL_SetRenderDrawColor(renderer,0,0,255,255);
 					SDL_RenderDrawLineF(renderer, x, ZOffset + Zdepth/2., x, SCREEN_HEIGHT);
