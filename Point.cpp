@@ -43,3 +43,14 @@ void Point::translate(double dx, double dy, double dz){
     y += dy;
     z += dz;
 }
+
+void Point::rotate(double px, double py, double pz, double angle){
+    double tx{x - px};
+    double tz{z - pz};
+    tx = tx*cos(angle) - tz*sin(angle);
+    tz = tx*sin(angle) + tz*cos(angle);
+    x = tx;
+    z = tz;
+
+
+}

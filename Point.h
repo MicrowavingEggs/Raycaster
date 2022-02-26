@@ -1,5 +1,6 @@
 #ifndef Point_h
 #define Point_h
+#include "math.h"
 
 class Point {
     private:
@@ -18,6 +19,7 @@ class Point {
         void setY(double py);
         void setZ(double pz);
         void translate(double dx, double dy, double dz);
+        void rotate(double px, double py, double pz, double angle);
 };
 
 

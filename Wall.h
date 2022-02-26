@@ -1,20 +1,22 @@
 #ifndef Wall_h
 #define Wall_h
-#include "math.h"
 #include "Point.h"
+#include "Hitbox.h"
 
 class Wall {
     private:
         Point P1;
         Point P2;
+        Hitbox hitbox;
         double height;
 
     public:
         Wall();
-        Wall(Point P1, Point P2,double h);
+        Wall(Point P1, Point P2, Hitbox box, double h);
         ~Wall();
         void rotate(double px, double py, double pz, double angle);
-        void translate(double x,double y, double z);
+        void translate(double dx,double dy, double dz);
+        Hitbox getHitbox();
         Point getP1();
         Point getP2();
         double getX1();

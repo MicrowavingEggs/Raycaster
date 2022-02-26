@@ -122,7 +122,7 @@ void Game::render(){
 		}
 		for(int i{0}; i < scene.wallCount(); ++i){
 			Wall wall = scene.getWall(i);
-			if(isInFov(Point(0,0,1),wall.getP1(),FOV) || isInFov(Point(0,0,1),wall.getP2(),FOV)){ // TODO : fix : the vectors involved in the if condition are incorrect.		
+			//if(isInFov(Point(0,0,1),wall.getP1(),FOV) || isInFov(Point(0,0,1),wall.getP2(),FOV)){ // TODO : fix : the vectors involved in the if condition are incorrect.		
 				double slope = wall.slope();
 				double wallHeight = wall.getHeight();
 				double x1 = wall.getX1();
@@ -149,14 +149,25 @@ void Game::render(){
 						SDL_RenderDrawLineF(renderer, x, ZOffset - Zdepth/2., x, ZOffset + Zdepth/2.);
 					}
 				}
-			}			
+			//}			
 		}
 		if (drawMinimap()){
 			for(int i{0}; i < scene.wallCount(); ++i){
 				Wall wall = scene.getWall(i);
 				SDL_SetRenderDrawColor(renderer,255,255,255,255);
-				SDL_RenderDrawLineF(renderer,800 - (wall.getX1()/4.),450 + (wall.getZ1()/4.),800 - (wall.getX2()/4.),450 + (wall.getZ2()/4.));
+				SDL_RenderDrawLineF(renderer,800 - (wall.getX1()/4.), 450 + (wall.getZ1()/4.), 800 - (wall.getX2()/4.), 450 + (wall.getZ2()/4.));
+				SDL_SetRenderDrawColor(renderer,255,0,0,255);
+				Rectangle hitbox = wall.getHitbox().getBox();
+				SDL_RenderDrawLineF(renderer, 800 - hitbox.getP1().getX()/4., 450 + hitbox.getP1().getZ()/4., 800 - hitbox.getP1().getX()/4., 450 + hitbox.getP2().getZ()/4.);
+				SDL_RenderDrawLineF(renderer, 800 - hitbox.getP1().getX()/4., 450 + hitbox.getP2().getZ()/4., 800 - hitbox.getP2().getX()/4., 450 + hitbox.getP2().getZ()/4.);
+				SDL_RenderDrawLineF(renderer, 800 - hitbox.getP2().getX()/4., 450 + hitbox.getP2().getZ()/4., 800 - hitbox.getP2().getX()/4., 450 + hitbox.getP1().getZ()/4.);
+				SDL_RenderDrawLineF(renderer, 800 - hitbox.getP2().getX()/4., 450 + hitbox.getP1().getZ()/4., 800 - hitbox.getP1().getX()/4., 450 + hitbox.getP1().getZ()/4.);
 			}
+
+			SDL_SetRenderDrawColor(renderer,0,128,0,255);
+			SDL_RenderDrawLineF(renderer,780,450,820,450);
+			SDL_RenderDrawLineF(renderer,800,450,800,480);
+
 		}
         SDL_RenderPresent(renderer);
 }

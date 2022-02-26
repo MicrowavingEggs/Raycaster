@@ -4,9 +4,10 @@ Wall::Wall(){
 
 }
 
-Wall::Wall(Point p1, Point p2,double h){
+Wall::Wall(Point p1, Point p2, Hitbox box, double h){
     P1 = p1;
     P2 = p2;
+    hitbox = box;
     height = h;
 }
 
@@ -15,25 +16,15 @@ Wall::~Wall(){
 }
 
 void Wall::rotate(double px, double py, double pz, double angle){
-    double tx1{P1.getX() - px};
-    double tz1{P1.getZ() - pz};
-    double tx2{P2.getX() - px};
-    double tz2{P2.getZ() - pz};
-    tx1 = tx1*cos(angle) - tz1*sin(angle);
-    tz1 = tx1*sin(angle) + tz1*cos(angle);
-    tx2 = tx2*cos(angle) - tz2*sin(angle);
-    tz2 = tx2*sin(angle) + tz2*cos(angle);
-    P1.setX(tx1);
-    P2.setX(tx2);
-    P1.setZ(tz1);
-    P2.setZ(tz2);
-
-    //TODO : remplacer par P.rotate(px,py,pz,angle);
+    P1.rotate(px,py,pz,angle);
+    P2.rotate(px,py,pz,angle);
+    hitbox.rotate(px,py,pz,angle);
 }
 
-void Wall::translate(double x, double y, double z){
-    P1.translate(x,y,z);
-    P2.translate(x,y,z);
+void Wall::translate(double dx, double dy, double dz){
+    P1.translate(dx,dy,dz);
+    P2.translate(dx,dy,dz);
+    hitbox.translate(dx,dy,dz);
 }
 
 double Wall::getHeight(){
@@ -80,4 +71,8 @@ double Wall::getY2(){
 }
 double Wall::getZ2(){
     return P2.getZ();
+}
+
+Hitbox Wall::getHitbox(){
+    return hitbox;
 }
