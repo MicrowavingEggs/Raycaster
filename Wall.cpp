@@ -4,11 +4,9 @@ Wall::Wall(){
 
 }
 
-Wall::Wall(double px1, double px2, double pz1, double pz2,double h){
-    x1 = px1;
-    x2 = px2;
-    z1 = pz1;
-    z2 = pz2;
+Wall::Wall(Point p1, Point p2,double h){
+    P1 = p1;
+    P2 = p2;
     height = h;
 }
 
@@ -17,30 +15,25 @@ Wall::~Wall(){
 }
 
 void Wall::rotate(double px, double py, double pz, double angle){
-    double tx1{x1 - px};
-    double tz1{z1 - pz};
-    double tx2{x2 - px};
-    double tz2{z2 - pz};
+    double tx1{P1.getX() - px};
+    double tz1{P1.getZ() - pz};
+    double tx2{P2.getX() - px};
+    double tz2{P2.getZ() - pz};
     tx1 = tx1*cos(angle) - tz1*sin(angle);
     tz1 = tx1*sin(angle) + tz1*cos(angle);
     tx2 = tx2*cos(angle) - tz2*sin(angle);
     tz2 = tx2*sin(angle) + tz2*cos(angle);
-    x1 = tx1;
-    x2 = tx2;
-    z1 = tz1;
-    z2 = tz2;
+    P1.setX(tx1);
+    P2.setX(tx2);
+    P1.setZ(tz1);
+    P2.setZ(tz2);
+
+    //TODO : remplacer par P.rotate(px,py,pz,angle);
 }
 
 void Wall::translate(double x, double y, double z){
-    x1 += x;
-    x2 += x;
-
-    //TODO Add y coordinate to wall in class definition first.
-    //y1 += y;
-    //y2 += y;
-    
-    z1 += z;
-    z2 += z;
+    P1.translate(x,y,z);
+    P2.translate(x,y,z);
 }
 
 double Wall::getHeight(){
@@ -48,10 +41,12 @@ double Wall::getHeight(){
 }
 
 double Wall::slope(){
-    return (z2-z1)/(x2-x1);
+    return (P2.getZ()-P1.getZ())/(P2.getX()-P1.getX());
 }
 
 double Wall::ZDepth(double x, double slope) {
+    double x1{P1.getX()};
+    double z1{P2.getZ()};
     if (z1+slope*(x-x1)>0.001){
         return height/(z1 + slope*(x-x1));
     }
@@ -60,15 +55,29 @@ double Wall::ZDepth(double x, double slope) {
     }
 }
 
-double Wall::getX1(){
-    return x1;
+Point Wall::getP1(){
+    return P1;
 }
-double Wall::getX2(){
-    return x2;
+
+Point Wall::getP2(){
+    return P2;
+}
+
+double Wall::getX1(){
+    return P1.getX();
+}
+double Wall::getY1(){
+    return P1.getY();
 }
 double Wall::getZ1(){
-    return z1;
+    return P1.getZ();
 }
-double Wall:: getZ2(){
-    return z2;
+double Wall::getX2(){
+    return P2.getX();
+}
+double Wall::getY2(){
+    return P2.getY();
+}
+double Wall::getZ2(){
+    return P2.getZ();
 }

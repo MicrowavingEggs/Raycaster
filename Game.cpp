@@ -112,6 +112,12 @@ void Game::render(){
     // For elt in scene, render it.
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
         SDL_RenderClear(renderer);
+		for(int x{0}; x < SCREEN_WIDTH; ++x){
+			SDL_SetRenderDrawColor(renderer,255,255,0,255);
+			SDL_RenderDrawLineF(renderer, x, 0, x, ZOffset);
+			SDL_SetRenderDrawColor(renderer,0,0,255,255);
+			SDL_RenderDrawLineF(renderer, x, ZOffset, x, SCREEN_HEIGHT);
+		}
 		for(int i{0}; i < scene.wallCount(); ++i){
 			Wall wall = scene.getWall(i);
 			double slope = wall.slope();
@@ -129,30 +135,24 @@ void Game::render(){
 			if (x1 > x2){
 				for(int x{(int) x2}; x < x1; ++x){
 					double Zdepth{y2 + slope2*(x-x2)};
-					SDL_SetRenderDrawColor(renderer,255,255,0,255);
-					SDL_RenderDrawLineF(renderer, x, 0, x, ZOffset - Zdepth/2.);
 					SDL_SetRenderDrawColor(renderer,(255*i)/5,255 - (255*i)/6,0,255);
 					SDL_RenderDrawLineF(renderer, x, ZOffset - Zdepth/2., x, ZOffset + Zdepth/2.);
-					SDL_SetRenderDrawColor(renderer,0,0,255,255);
-					SDL_RenderDrawLineF(renderer, x, ZOffset + Zdepth/2., x, SCREEN_HEIGHT);
 				}
 			}
 			else{
 				for(int x{(int) x1}; x < x2; ++x){
 					double Zdepth{y1 + slope2*(x-x1)};
-					SDL_SetRenderDrawColor(renderer,255,255,0,255);
-					SDL_RenderDrawLineF(renderer, x, 0, x, ZOffset - Zdepth/2.);
 					SDL_SetRenderDrawColor(renderer,(255*i)/5,255 - (255*i)/6,0,255);
 					SDL_RenderDrawLineF(renderer, x, ZOffset - Zdepth/2., x, ZOffset + Zdepth/2.);
-					SDL_SetRenderDrawColor(renderer,0,0,255,255);
-					SDL_RenderDrawLineF(renderer, x, ZOffset + Zdepth/2., x, SCREEN_HEIGHT);
 				}
 			}
-			if (drawMinimap()){
+		}
+		if (drawMinimap()){
+			for(int i{0}; i < scene.wallCount(); ++i){
+				Wall wall = scene.getWall(i);
 				SDL_SetRenderDrawColor(renderer,255,255,255,255);
-				SDL_RenderDrawLineF(renderer,800 - (x1/4.),450 + (wall.getZ1()/4.),800 - (x2/4.),450 + (wall.getZ2()/4.));
+				SDL_RenderDrawLineF(renderer,800 - (wall.getX1()/4.),450 + (wall.getZ1()/4.),800 - (wall.getX2()/4.),450 + (wall.getZ2()/4.));
 			}
-
 		}
         SDL_RenderPresent(renderer);
 }
