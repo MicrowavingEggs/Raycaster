@@ -13,9 +13,10 @@ class Game {
         int SCREEN_HEIGHT;
         bool running;
         Scene scene;
+        Entity player;
         double VAngle;
         double speed;
-        Entity player;
+        double FOV;        
         bool minimapOn;
 
     public:

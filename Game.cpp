@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "utils.cpp"
 
 const Uint8* state = SDL_GetKeyboardState(NULL);
 double ZOffset{450.};
@@ -9,6 +10,7 @@ Game::Game(){
     FPS = 60;
     VAngle = M_PI/((float) (1000));
     speed = 80/((float) FPS);
+	FOV = 2*M_PI/3.;
     window = SDL_CreateWindow("Rasterizer", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	player = Entity();
@@ -120,32 +122,34 @@ void Game::render(){
 		}
 		for(int i{0}; i < scene.wallCount(); ++i){
 			Wall wall = scene.getWall(i);
-			double slope = wall.slope();
-			double wallHeight = wall.getHeight();
-			double x1 = wall.getX1();
-			double x2 = wall.getX2();
-			double y1 = wall.ZDepth(x1, slope);
-			double y2 = wall.ZDepth(x2, slope);
-			SDL_SetRenderDrawColor(renderer,(255*i)/5,255 - (255*i)/6,0,255);
-			SDL_RenderDrawLineF(renderer, x1,ZOffset + y1/2., x2,ZOffset + y2/2.);
-			SDL_RenderDrawLineF(renderer, x1,ZOffset - y1/2., x2,ZOffset - y2/2.);
-			SDL_RenderDrawLineF(renderer, x1,ZOffset - y1/2., x1,ZOffset + y1/2.);
-			SDL_RenderDrawLineF(renderer, x2,ZOffset - y2/2., x2,ZOffset + y2/2.);
-			double slope2 = (y2-y1)/(x2-x1);
-			if (x1 > x2){
-				for(int x{(int) x2}; x < x1; ++x){
-					double Zdepth{y2 + slope2*(x-x2)};
-					SDL_SetRenderDrawColor(renderer,(255*i)/5,255 - (255*i)/6,0,255);
-					SDL_RenderDrawLineF(renderer, x, ZOffset - Zdepth/2., x, ZOffset + Zdepth/2.);
+			if(isInFov(Point(0,0,1),wall.getP1(),FOV) || isInFov(Point(0,0,1),wall.getP2(),FOV)){ // TODO : fix : the vectors involved in the if condition are incorrect.		
+				double slope = wall.slope();
+				double wallHeight = wall.getHeight();
+				double x1 = wall.getX1();
+				double x2 = wall.getX2();
+				double y1 = wall.ZDepth(x1, slope);
+				double y2 = wall.ZDepth(x2, slope);
+				SDL_SetRenderDrawColor(renderer,(255*i)/5,255 - (255*i)/6,0,255);
+				SDL_RenderDrawLineF(renderer, x1,ZOffset + y1/2., x2,ZOffset + y2/2.);
+				SDL_RenderDrawLineF(renderer, x1,ZOffset - y1/2., x2,ZOffset - y2/2.);
+				SDL_RenderDrawLineF(renderer, x1,ZOffset - y1/2., x1,ZOffset + y1/2.);
+				SDL_RenderDrawLineF(renderer, x2,ZOffset - y2/2., x2,ZOffset + y2/2.);
+				double slope2 = (y2-y1)/(x2-x1);
+				if (x1 > x2){
+					for(int x{(int) x2}; x < x1; ++x){
+						double Zdepth{y2 + slope2*(x-x2)};
+						SDL_SetRenderDrawColor(renderer,(255*i)/5,255 - (255*i)/6,0,255);
+						SDL_RenderDrawLineF(renderer, x, ZOffset - Zdepth/2., x, ZOffset + Zdepth/2.);
+					}
 				}
-			}
-			else{
-				for(int x{(int) x1}; x < x2; ++x){
-					double Zdepth{y1 + slope2*(x-x1)};
-					SDL_SetRenderDrawColor(renderer,(255*i)/5,255 - (255*i)/6,0,255);
-					SDL_RenderDrawLineF(renderer, x, ZOffset - Zdepth/2., x, ZOffset + Zdepth/2.);
+				else{
+					for(int x{(int) x1}; x < x2; ++x){
+						double Zdepth{y1 + slope2*(x-x1)};
+						SDL_SetRenderDrawColor(renderer,(255*i)/5,255 - (255*i)/6,0,255);
+						SDL_RenderDrawLineF(renderer, x, ZOffset - Zdepth/2., x, ZOffset + Zdepth/2.);
+					}
 				}
-			}
+			}			
 		}
 		if (drawMinimap()){
 			for(int i{0}; i < scene.wallCount(); ++i){
