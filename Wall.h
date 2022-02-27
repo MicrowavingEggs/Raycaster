@@ -7,18 +7,24 @@ class Wall {
     private:
         Point P1;
         Point P2;
-        Hitbox hitbox;
         double height;
+        int R;
+        int G;
+        int B;
+        int alpha;
 
     public:
         Wall();
-        Wall(Point P1, Point P2, Hitbox box, double h);
+        Wall(Point P1, Point P2, double h,int r, int g, int b);
         ~Wall();
         void rotate(double px, double py, double pz, double angle);
         void translate(double dx,double dy, double dz);
         Hitbox getHitbox();
         Point getP1();
         Point getP2();
+        int getR();
+        int getG();
+        int getB();
         double getX1();
         double getY1();
         double getZ1();

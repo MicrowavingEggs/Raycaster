@@ -1,20 +1,20 @@
 #ifndef Entity_h
 #define Entity_h
+#include "Point.h"
 
 class Entity {
     private:
-        int hp;
-        double px;
-        double py;
-        double pz;
+        int HP;
+        Point pos;
         double angle;
         int jumpingState;
     
     public:
         Entity();
-        Entity(int HP,double x, double y, double z);
+        Entity(Point p,int hp);
         ~Entity();
         int getHp();
+        Point getPos();
         double getPx();
         double getPy();
         double getPz();
@@ -29,7 +29,7 @@ class Entity {
         void setAngle();
         void loseHp(int deltaHp);
         bool isDead();
-        void move(double deltaX,double deltaY, double deltaZ);
+        void translate(double deltaX,double deltaY, double deltaZ);
         void rotate(double deltaAngle);
 };
 

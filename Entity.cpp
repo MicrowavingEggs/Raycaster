@@ -1,28 +1,37 @@
 #include "Entity.h"
 
 Entity::Entity(){
-    hp = 100;
-    px = 0;
-    py = 0;
-    pz = 0;
+    HP = 100;
+    pos = Point();
+    angle = 0;
+    jumpingState = 0;
+}
+
+Entity::Entity(Point p, int hp){
+    HP = hp;
+    pos = p;
     angle = 0;
     jumpingState = 0;
 }
 
 Entity::~Entity(){
-    ;
+    
+}
+
+Point Entity::getPos(){
+    return pos;
 }
 
 double Entity::getPx(){
-    return px;
+    return pos.getX();
 }
 
 double Entity::getPy(){
-    return py;
+    return pos.getY();
 }
 
 double Entity::getPz(){
-    return pz;
+    return pos.getZ();
 }
 
 double Entity::getAngle(){
@@ -41,10 +50,8 @@ void Entity::resetJump(){
     jumpingState = 0;
 }
 
-void Entity::move(double deltaX,double deltaY, double deltaZ){
-    px += deltaX;
-    py += deltaY;
-    pz += deltaZ;
+void Entity::translate(double dx, double dy, double dz){
+    pos.translate(dx,dy,dz);
 }
 
 void Entity::rotate(double deltaAngle){

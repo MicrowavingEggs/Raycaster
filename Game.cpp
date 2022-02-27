@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "utils.cpp"
+#include "Ray.h"
 
 const Uint8* state = SDL_GetKeyboardState(NULL);
 double ZOffset{450.};
@@ -8,12 +9,12 @@ Game::Game(){
     SCREEN_WIDTH = 1600;
     SCREEN_HEIGHT = 900;
     FPS = 60;
-    VAngle = M_PI/((float) (1000));
-    speed = 80/((float) FPS);
+    VAngle = M_PI/((float) (200));
+    speed = 2/((float) FPS);
 	FOV = 2*M_PI/3.;
     window = SDL_CreateWindow("Rasterizer", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-	player = Entity();
+	player = Entity(Point(0,0,0),100);
     scene = Scene();
 	minimapOn = false;
 }
@@ -61,32 +62,32 @@ void Game::update(){
 		double z = player.getPz();
 		if (state[SDL_SCANCODE_UP])
 		{
-			scene.translate(0,0,-speed);
+			player.translate(speed*sin(playerAngle),0,speed*cos(playerAngle));
 		}
 
 		if (state[SDL_SCANCODE_DOWN])
 		{
-			scene.translate(0,0,speed);
+			player.translate(-speed*sin(playerAngle),0,-speed*cos(playerAngle));
 		}
 
 		if (state[SDL_SCANCODE_Q])
 		{
-			scene.translate(speed,0,0);
+			player.translate(-speed*cos(playerAngle),0,-speed*sin(playerAngle));
 		}
 
 		if (state[SDL_SCANCODE_E])
 		{
-			scene.translate(-speed,0,0);
+			player.translate(speed*cos(playerAngle),0,-speed*sin(playerAngle));
 		}
 
 		if (state[SDL_SCANCODE_LEFT])
 		{
-			scene.rotate(x,y,z,-VAngle);
+			player.rotate(VAngle);
 		}
 
 		if (state[SDL_SCANCODE_RIGHT])
 		{
-			scene.rotate(x,y,z,VAngle);
+			player.rotate(-VAngle);
 		}
 
 		if (state[SDL_SCANCODE_SPACE])
@@ -114,60 +115,81 @@ void Game::render(){
     // For elt in scene, render it.
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
         SDL_RenderClear(renderer);
+		int countWalls{scene.wallCount()};
 		for(int x{0}; x < SCREEN_WIDTH; ++x){
 			SDL_SetRenderDrawColor(renderer,255,255,0,255);
 			SDL_RenderDrawLineF(renderer, x, 0, x, ZOffset);
 			SDL_SetRenderDrawColor(renderer,0,0,255,255);
 			SDL_RenderDrawLineF(renderer, x, ZOffset, x, SCREEN_HEIGHT);
+			Point playerPos{player.getPos()};
+			double rayAngle{M_PI/2. + ((FOV/2.)*(1-(2*x/((float)SCREEN_WIDTH-1))))};
+			Ray ray{Ray(playerPos,rayAngle + player.getAngle(),100)};
+			bool rayHit{false};
+			double minDist = 150; // TODO : à améliorer : prendre min_dist tq min_dist = +inf
+			int wallToDraw;
+			for(int i{0}; i < countWalls; ++i){
+				double tempDist{ray.getIntersection(scene.getWall(i))};
+				if (tempDist > 0.01 && tempDist <= 100){
+					rayHit = true;
+					if (tempDist < minDist){
+						minDist = tempDist;
+						wallToDraw = i;
+					}
+				}
+			}
+			if(rayHit){
+				Wall wall{scene.getWall(wallToDraw)};
+				double height{wall.getHeight()/minDist};
+				SDL_SetRenderDrawColor(renderer,wall.getR(),wall.getG(),wall.getB(),255);
+				SDL_RenderDrawLineF(renderer,x,ZOffset - height/2.,x,ZOffset + height/2.);
+				SDL_SetRenderDrawColor(renderer,255,255,255,255);
+				SDL_RenderDrawLineF(renderer,800 + playerPos.getX(),450 - playerPos.getZ(),800 + playerPos.getX() + 100*cos(rayAngle+player.getAngle()), 450 - playerPos.getZ() + 100*sin(rayAngle+player.getAngle()));
+			}
 		}
-		for(int i{0}; i < scene.wallCount(); ++i){
-			Wall wall = scene.getWall(i);
+		//for(int i{0}; i < scene.wallCount(); ++i){
+			//Wall wall = scene.getWall(i);
 			//if(isInFov(Point(0,0,1),wall.getP1(),FOV) || isInFov(Point(0,0,1),wall.getP2(),FOV)){ // TODO : fix : the vectors involved in the if condition are incorrect.		
-				double slope = wall.slope();
-				double wallHeight = wall.getHeight();
-				double x1 = wall.getX1();
-				double x2 = wall.getX2();
-				double y1 = wall.ZDepth(x1, slope);
-				double y2 = wall.ZDepth(x2, slope);
-				SDL_SetRenderDrawColor(renderer,(255*i)/5,255 - (255*i)/6,0,255);
-				SDL_RenderDrawLineF(renderer, x1,ZOffset + y1/2., x2,ZOffset + y2/2.);
-				SDL_RenderDrawLineF(renderer, x1,ZOffset - y1/2., x2,ZOffset - y2/2.);
-				SDL_RenderDrawLineF(renderer, x1,ZOffset - y1/2., x1,ZOffset + y1/2.);
-				SDL_RenderDrawLineF(renderer, x2,ZOffset - y2/2., x2,ZOffset + y2/2.);
-				double slope2 = (y2-y1)/(x2-x1);
-				if (x1 > x2){
-					for(int x{(int) x2}; x < x1; ++x){
-						double Zdepth{y2 + slope2*(x-x2)};
-						SDL_SetRenderDrawColor(renderer,(255*i)/5,255 - (255*i)/6,0,255);
-						SDL_RenderDrawLineF(renderer, x, ZOffset - Zdepth/2., x, ZOffset + Zdepth/2.);
-					}
-				}
-				else{
-					for(int x{(int) x1}; x < x2; ++x){
-						double Zdepth{y1 + slope2*(x-x1)};
-						SDL_SetRenderDrawColor(renderer,(255*i)/5,255 - (255*i)/6,0,255);
-						SDL_RenderDrawLineF(renderer, x, ZOffset - Zdepth/2., x, ZOffset + Zdepth/2.);
-					}
-				}
+				//double slope = wall.slope();
+				//double wallHeight = wall.getHeight();
+				//double x1 = wall.getX1();
+				//double x2 = wall.getX2();
+				//double y1 = wall.ZDepth(x1, slope);
+				//double y2 = wall.ZDepth(x2, slope);
+				//SDL_SetRenderDrawColor(renderer,(255*i)/5,255 - (255*i)/6,0,255);
+				//SDL_RenderDrawLineF(renderer, x1,ZOffset + y1/2., x2,ZOffset + y2/2.);
+				//SDL_RenderDrawLineF(renderer, x1,ZOffset - y1/2., x2,ZOffset - y2/2.);
+				//SDL_RenderDrawLineF(renderer, x1,ZOffset - y1/2., x1,ZOffset + y1/2.);
+				//SDL_RenderDrawLineF(renderer, x2,ZOffset - y2/2., x2,ZOffset + y2/2.);
+				//double slope2 = (y2-y1)/(x2-x1);
+				//if (x1 > x2){
+					//for(int x{(int) x2}; x < x1; ++x){
+						//double Zdepth{y2 + slope2*(x-x2)};
+						//SDL_SetRenderDrawColor(renderer,(255*i)/5,255 - (255*i)/6,0,255);
+						//SDL_RenderDrawLineF(renderer, x, ZOffset - Zdepth/2., x, ZOffset + Zdepth/2.);
+					//}
+				//}
+				//else{
+					//for(int x{(int) x1}; x < x2; ++x){
+						//double Zdepth{y1 + slope2*(x-x1)};
+						//SDL_SetRenderDrawColor(renderer,(255*i)/5,255 - (255*i)/6,0,255);
+						//SDL_RenderDrawLineF(renderer, x, ZOffset - Zdepth/2., x, ZOffset + Zdepth/2.);
+					//}
+				//}
 			//}			
-		}
+		//}
 		if (drawMinimap()){
 			for(int i{0}; i < scene.wallCount(); ++i){
 				Wall wall = scene.getWall(i);
-				SDL_SetRenderDrawColor(renderer,255,255,255,255);
-				SDL_RenderDrawLineF(renderer,800 - (wall.getX1()/4.), 450 + (wall.getZ1()/4.), 800 - (wall.getX2()/4.), 450 + (wall.getZ2()/4.));
-				SDL_SetRenderDrawColor(renderer,255,0,0,255);
-				Rectangle hitbox = wall.getHitbox().getBox();
-				SDL_RenderDrawLineF(renderer, 800 - hitbox.getP1().getX()/4., 450 + hitbox.getP1().getZ()/4., 800 - hitbox.getP1().getX()/4., 450 + hitbox.getP2().getZ()/4.);
-				SDL_RenderDrawLineF(renderer, 800 - hitbox.getP1().getX()/4., 450 + hitbox.getP2().getZ()/4., 800 - hitbox.getP2().getX()/4., 450 + hitbox.getP2().getZ()/4.);
-				SDL_RenderDrawLineF(renderer, 800 - hitbox.getP2().getX()/4., 450 + hitbox.getP2().getZ()/4., 800 - hitbox.getP2().getX()/4., 450 + hitbox.getP1().getZ()/4.);
-				SDL_RenderDrawLineF(renderer, 800 - hitbox.getP2().getX()/4., 450 + hitbox.getP1().getZ()/4., 800 - hitbox.getP1().getX()/4., 450 + hitbox.getP1().getZ()/4.);
+				SDL_SetRenderDrawColor(renderer,0,0,0,255);
+				SDL_RenderDrawLineF(renderer,800 - 5*(wall.getX1()), 450 + 5*(wall.getZ1()), 800 - 5*(wall.getX2()), 450 + 5*(wall.getZ2()));
+				//Rectangle hitbox = wall.getHitbox().getBox();
+				//SDL_RenderDrawLineF(renderer, 800 - hitbox.getP1().getX()/4., 450 + hitbox.getP1().getZ()/4., 800 - hitbox.getP1().getX()/4., 450 + hitbox.getP2().getZ()/4.);
+				//SDL_RenderDrawLineF(renderer, 800 - hitbox.getP1().getX()/4., 450 + hitbox.getP2().getZ()/4., 800 - hitbox.getP2().getX()/4., 450 + hitbox.getP2().getZ()/4.);
+				//SDL_RenderDrawLineF(renderer, 800 - hitbox.getP2().getX()/4., 450 + hitbox.getP2().getZ()/4., 800 - hitbox.getP2().getX()/4., 450 + hitbox.getP1().getZ()/4.);
+				//SDL_RenderDrawLineF(renderer, 800 - hitbox.getP2().getX()/4., 450 + hitbox.getP1().getZ()/4., 800 - hitbox.getP1().getX()/4., 450 + hitbox.getP1().getZ()/4.);
 			}
-
-			SDL_SetRenderDrawColor(renderer,0,128,0,255);
-			SDL_RenderDrawLineF(renderer,780,450,820,450);
-			SDL_RenderDrawLineF(renderer,800,450,800,480);
-
+			SDL_SetRenderDrawColor(renderer,0,0,0,255);
+			SDL_RenderDrawLineF(renderer,800 - 5*(player.getPx()),450 + 5*(player.getPz()),800 - 5*(player.getPx()),450 + 5*(player.getPz()));
 		}
         SDL_RenderPresent(renderer);
 }
