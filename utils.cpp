@@ -12,7 +12,7 @@ static double norm(Point vec){
 }
 
 static double dist(Point vec1, Point vec2){
-    return norm(Point(vec1.getX() - vec2.getX(),vec1.getY() - vec2.getY(),vec1.getZ() - vec2.getZ()));
+    return norm(Point(vec1.getX() - vec2.getX(),vec1.getY() - vec2.getY(),vec1.getZ() - vec2.getZ()));  
 }
 
 static double dotProduct(Point vec1, Point vec2){

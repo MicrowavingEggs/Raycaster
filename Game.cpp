@@ -62,22 +62,22 @@ void Game::update(){
 		double z = player.getPz();
 		if (state[SDL_SCANCODE_UP])
 		{
-			player.translate(speed*sin(playerAngle),0,speed*cos(playerAngle));
+			player.translate(speed*cos(playerAngle),0,speed*sin(playerAngle));
 		}
 
 		if (state[SDL_SCANCODE_DOWN])
 		{
-			player.translate(-speed*sin(playerAngle),0,-speed*cos(playerAngle));
+			player.translate(-speed*cos(playerAngle),0,-speed*sin(playerAngle));
 		}
 
 		if (state[SDL_SCANCODE_Q])
 		{
-			player.translate(-speed*cos(playerAngle),0,-speed*sin(playerAngle));
+			player.translate(speed*sin(playerAngle),0,speed*cos(playerAngle));
 		}
 
 		if (state[SDL_SCANCODE_E])
 		{
-			player.translate(speed*cos(playerAngle),0,-speed*sin(playerAngle));
+			player.translate(-speed*sin(playerAngle),0,-speed*cos(playerAngle));
 		}
 
 		if (state[SDL_SCANCODE_LEFT])
@@ -122,19 +122,17 @@ void Game::render(){
 			SDL_SetRenderDrawColor(renderer,0,0,255,255);
 			SDL_RenderDrawLineF(renderer, x, ZOffset, x, SCREEN_HEIGHT);
 			Point playerPos{player.getPos()};
-			double rayAngle{M_PI/2. + ((FOV/2.)*(1-(2*x/((float)SCREEN_WIDTH-1))))};
-			Ray ray{Ray(playerPos,rayAngle + player.getAngle(),100)};
+			double rayAngle{(FOV/2.)*(1-(2*x/((float) SCREEN_WIDTH-1))) + player.getAngle()};
+			Ray ray{Ray(playerPos,rayAngle,100)};
 			bool rayHit{false};
-			double minDist = 150; // TODO : à améliorer : prendre min_dist tq min_dist = +inf
+			double minDist = 150.; // TODO : à améliorer : prendre min_dist tq min_dist = +inf
 			int wallToDraw;
 			for(int i{0}; i < countWalls; ++i){
 				double tempDist{ray.getIntersection(scene.getWall(i))};
-				if (tempDist > 0.01 && tempDist <= 100){
-					rayHit = true;
-					if (tempDist < minDist){
+				if (0.01 < tempDist && tempDist <= 100 && tempDist < minDist){
+						rayHit = true;
 						minDist = tempDist;
 						wallToDraw = i;
-					}
 				}
 			}
 			if(rayHit){
@@ -142,8 +140,8 @@ void Game::render(){
 				double height{wall.getHeight()/minDist};
 				SDL_SetRenderDrawColor(renderer,wall.getR(),wall.getG(),wall.getB(),255);
 				SDL_RenderDrawLineF(renderer,x,ZOffset - height/2.,x,ZOffset + height/2.);
-				SDL_SetRenderDrawColor(renderer,255,255,255,255);
-				SDL_RenderDrawLineF(renderer,800 + playerPos.getX(),450 - playerPos.getZ(),800 + playerPos.getX() + 100*cos(rayAngle+player.getAngle()), 450 - playerPos.getZ() + 100*sin(rayAngle+player.getAngle()));
+				//SDL_SetRenderDrawColor(renderer,255,255,255,255);
+				//SDL_RenderDrawLineF(renderer,800 + playerPos.getX(),450 - playerPos.getZ(),800 + playerPos.getX() + 100*cos(rayAngle+player.getAngle()), 450 - playerPos.getZ() + 100*sin(rayAngle+player.getAngle()));
 			}
 		}
 		//for(int i{0}; i < scene.wallCount(); ++i){

@@ -27,9 +27,9 @@ double Ray::getIntersection(Wall wall){
     double z4{wall.getZ2()};
     double denom{(x1-x2)*(z3-z4) - (z1-z2)*(x3-x4)};
     double t{((x1-x3)*(z3-z4) - (z1-z3)*(x3-x4))/denom};
-    double u{((x1-x3)*(z1-z2) - (z1-z3)*(x1-z2))/denom};
-    if ((0 <= t <= 1) && (0 <= u <= 1)){
-        Point Intersection{Point(x3 +u*(x4-x3),0,z3 + u*(z4-z3))};
+    double u{((x1-x3)*(z1-z2) - (z1-z3)*(x1-x2))/denom};
+    if (0 <= t && t <= 1 && 0 <= u && u <= 1){
+        Point Intersection{Point(x3 + u*(x4-x3),0,z3 + u*(z4-z3))};
         return dist(pos,Intersection);
     }
     else{
