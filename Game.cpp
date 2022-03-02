@@ -72,12 +72,12 @@ void Game::update(){
 
 		if (state[SDL_SCANCODE_Q])
 		{
-			player.translate(speed*sin(playerAngle),0,speed*cos(playerAngle));
+			player.translate(speed*sin(playerAngle),0,-speed*cos(playerAngle));
 		}
 
 		if (state[SDL_SCANCODE_E])
 		{
-			player.translate(-speed*sin(playerAngle),0,-speed*cos(playerAngle));
+			player.translate(-speed*sin(playerAngle),0,speed*cos(playerAngle));
 		}
 
 		if (state[SDL_SCANCODE_LEFT])
