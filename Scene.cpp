@@ -1,14 +1,23 @@
 #include "Scene.h"
 
 Scene::Scene(){
-    wall.push_back(Wall(Point(-1,0,1),Point(2,0,1),150,255,0,0));
-    wall.push_back(Wall(Point(4,0,5),Point(8,0,2),150,128,255,0));
-    wall.push_back(Wall(Point(8,0,2),Point(4,0,9),150,0,128,255));
-    wall.push_back(Wall(Point(12,0,4),Point(12,0,-2),150,128,128,255));
-    wall.push_back(Wall(Point(6,0,-6),Point(7,0,6),150,128,128,255));
-    for (int i{0}; i < 10 ; i++){
-        wall.push_back(Wall(Point(i,0,-i),Point(i+1,0,i),150,128,128,255));
-    }
+    wall.push_back(Wall(Point(0,0,0),Point(0,0,5),150,128,128,255));
+    wall.push_back(Wall(Point(0,0,0),Point(5,0,0),150,128,128,255));
+    wall.push_back(Wall(Point(5,0,0),Point(5,0,5),150,128,128,255));
+    wall.push_back(Wall(Point(0,0,5),Point(5,0,5),150,128,128,255));
+    wall.push_back(Wall(Point(0,0,1),Point(2,0,1),150,128,128,255));
+    wall.push_back(Wall(Point(0,0,2),Point(2,0,2),150,128,128,255));
+    wall.push_back(Wall(Point(1,0,3),Point(2,0,3),150,128,128,255));
+    wall.push_back(Wall(Point(3,0,1),Point(4,0,1),150,128,128,255));
+    wall.push_back(Wall(Point(4,0,3),Point(5,0,3),150,128,128,255));
+    wall.push_back(Wall(Point(4,0,4),Point(5,0,4),150,128,128,255));
+    wall.push_back(Wall(Point(2,0,1),Point(2,0,2),150,128,128,255));
+    wall.push_back(Wall(Point(3,0,0),Point(3,0,1),150,128,128,255));
+    wall.push_back(Wall(Point(4,0,0),Point(4,0,1),150,128,128,255));
+    wall.push_back(Wall(Point(1,0,3),Point(1,0,5),150,128,128,255));
+    wall.push_back(Wall(Point(2,0,3),Point(2,0,4),150,128,128,255));
+    wall.push_back(Wall(Point(3,0,3),Point(3,0,5),150,128,128,255));
+    wall.push_back(Wall(Point(4,0,3),Point(4,0,4),150,128,128,255));
 }
 
 Scene::~Scene(){
