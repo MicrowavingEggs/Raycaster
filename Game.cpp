@@ -9,7 +9,7 @@ Game::Game(){
     SCREEN_WIDTH = 1600;
     SCREEN_HEIGHT = 900;
     FPS = 60;
-    VAngle = M_PI/((float) (200));
+    VAngle = M_PI/((float) (100));
     speed = 2/((float) FPS);
 	FOV = 2*M_PI/3.;
     window = SDL_CreateWindow("Rasterizer", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
@@ -117,10 +117,10 @@ void Game::render(){
         SDL_RenderClear(renderer);
 		int countWalls{scene.wallCount()};
 		for(int x{0}; x < SCREEN_WIDTH; ++x){
-			SDL_SetRenderDrawColor(renderer,255,255,0,255);
+			/*SDL_SetRenderDrawColor(renderer,255,255,0,255);
 			SDL_RenderDrawLineF(renderer, x, 0, x, ZOffset);
 			SDL_SetRenderDrawColor(renderer,0,0,255,255);
-			SDL_RenderDrawLineF(renderer, x, ZOffset, x, SCREEN_HEIGHT);
+			SDL_RenderDrawLineF(renderer, x, ZOffset, x, SCREEN_HEIGHT); */
 			Point playerPos{player.getPos()};
 			double rayAngle{(FOV/2.)*(1-(2*x/((float) SCREEN_WIDTH-1))) + player.getAngle()};
 			Ray ray{Ray(playerPos,rayAngle,100)};
@@ -138,7 +138,7 @@ void Game::render(){
 			if(rayHit){
 				Wall wall{scene.getWall(wallToDraw)};
 				double height{wall.getHeight()/minDist};
-				SDL_SetRenderDrawColor(renderer,wall.getR(),wall.getG(),wall.getB(),255);
+				SDL_SetRenderDrawColor(renderer,wall.getR()/minDist < wall.getR() ? wall.getR()/minDist : wall.getR(), wall.getG()/minDist < wall.getG() ? wall.getG()/minDist : wall.getG(), wall.getB()/minDist < 255 ? wall.getB()/minDist : wall.getB(), 255/minDist < 255 ? 255/minDist : 255);
 				SDL_RenderDrawLineF(renderer,x,ZOffset - height/2.,x,ZOffset + height/2.);
 				//SDL_SetRenderDrawColor(renderer,255,255,255,255);
 				//SDL_RenderDrawLineF(renderer,800 + playerPos.getX(),450 - playerPos.getZ(),800 + playerPos.getX() + 100*cos(rayAngle+player.getAngle()), 450 - playerPos.getZ() + 100*sin(rayAngle+player.getAngle()));
