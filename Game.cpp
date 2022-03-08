@@ -17,6 +17,7 @@ Game::Game(){
 	player = Entity(Point(0,0,0),100);
     scene = Scene();
 	minimapOn = false;
+	hitbox = Hitbox(Rectangle(Point(0,0,0),Point(1,0,1)));
 }
 
 Game::~Game(){
@@ -188,6 +189,13 @@ void Game::render(){
 			}
 			SDL_SetRenderDrawColor(renderer,0,0,0,255);
 			SDL_RenderDrawLineF(renderer,800 - 5*(player.getPx()),450 + 5*(player.getPz()),800 - 5*(player.getPx()),450 + 5*(player.getPz()));
+			if (player.isHitting(hitbox)){
+				SDL_SetRenderDrawColor(renderer,255,0,0,255);
+				SDL_RenderDrawLineF(renderer,800,450,795,450);
+				SDL_RenderDrawLineF(renderer,795,450,795,455);
+				SDL_RenderDrawLineF(renderer,795,455,800,455);
+				SDL_RenderDrawLineF(renderer,800,455,800,450);
+			}
 		}
         SDL_RenderPresent(renderer);
 }

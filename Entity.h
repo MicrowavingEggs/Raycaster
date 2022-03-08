@@ -1,6 +1,8 @@
 #ifndef Entity_h
 #define Entity_h
 #include "Point.h"
+#include "Hitbox.h"
+#include "Rectangle.h"
 
 class Entity {
     private:
@@ -31,6 +33,7 @@ class Entity {
         bool isDead();
         void translate(double deltaX,double deltaY, double deltaZ);
         void rotate(double deltaAngle);
+        bool isHitting(Hitbox hitbox);
 };
 
 

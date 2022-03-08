@@ -3,6 +3,8 @@
 #include <SDL2/SDL.h>
 #include "Scene.h"
 #include "Entity.h"
+#include "Hitbox.h"
+#include "Rectangle.h"
 
 class Game {
     private :
@@ -18,6 +20,7 @@ class Game {
         double speed;
         double FOV;        
         bool minimapOn;
+        Hitbox hitbox;
 
     public:
         Game();
