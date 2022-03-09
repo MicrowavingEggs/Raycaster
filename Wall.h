@@ -12,6 +12,7 @@ class Wall {
         int G;
         int B;
         int alpha;
+        bool enabled;
 
     public:
         Wall();
@@ -34,6 +35,9 @@ class Wall {
         double getHeight();
         double slope();
         double ZDepth(double x, double slope);
+        void enable();
+        void disable();
+        bool isEnabled();
 };
 
 #endif /* Wall_h */

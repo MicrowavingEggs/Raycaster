@@ -11,6 +11,7 @@ Wall::Wall(Point p1, Point p2, double h,int r, int g, int b){
     R = r;
     G = g;
     B = b;
+    enabled = true;
 }
 
 Wall::~Wall(){
@@ -83,4 +84,16 @@ double Wall::getY2(){
 }
 double Wall::getZ2(){
     return P2.getZ();
+}
+
+void Wall::enable(){
+    enabled = true;
+}
+
+void Wall::disable(){
+    enabled = false;
+}
+
+bool Wall::isEnabled(){
+    return enabled;
 }

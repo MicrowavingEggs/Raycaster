@@ -11,11 +11,14 @@ class Scene {
         Scene();
         ~Scene();
         Wall getWall(int i);
+        void addWall(Wall w);
         void rotate(double px, double py, double pz, double angle);
         void translate(double x, double y, double z);
         int wallCount(){
             return wall.size();
         }
+        void disable(int i);
+        void enable(int i);
 };
 
 

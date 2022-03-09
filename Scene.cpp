@@ -39,3 +39,15 @@ void Scene::translate(double x, double y, double z){
         wall[i].translate(x,y,z);
     }
 }
+
+void Scene::addWall(Wall w){
+    wall.push_back(w);
+}
+
+void Scene::disable(int i){
+    wall[i].disable();
+}
+
+void Scene::enable(int i){
+    wall[i].enable();
+}

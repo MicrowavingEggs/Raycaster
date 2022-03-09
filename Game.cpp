@@ -54,6 +54,12 @@ void Game::handleEvents(){
 		default:
 			break;
 		}
+		if (player.isHitting(hitbox)){
+			scene.disable(2);
+		}
+		else{
+			scene.enable(2);
+		}
 }
 void Game::update(){
 		// gestion du mouvement
@@ -179,13 +185,15 @@ void Game::render(){
 		if (drawMinimap()){
 			for(int i{0}; i < scene.wallCount(); ++i){
 				Wall wall = scene.getWall(i);
-				SDL_SetRenderDrawColor(renderer,0,0,0,255);
-				SDL_RenderDrawLineF(renderer,800 - 5*(wall.getX1()), 450 + 5*(wall.getZ1()), 800 - 5*(wall.getX2()), 450 + 5*(wall.getZ2()));
-				//Rectangle hitbox = wall.getHitbox().getBox();
-				//SDL_RenderDrawLineF(renderer, 800 - hitbox.getP1().getX()/4., 450 + hitbox.getP1().getZ()/4., 800 - hitbox.getP1().getX()/4., 450 + hitbox.getP2().getZ()/4.);
-				//SDL_RenderDrawLineF(renderer, 800 - hitbox.getP1().getX()/4., 450 + hitbox.getP2().getZ()/4., 800 - hitbox.getP2().getX()/4., 450 + hitbox.getP2().getZ()/4.);
-				//SDL_RenderDrawLineF(renderer, 800 - hitbox.getP2().getX()/4., 450 + hitbox.getP2().getZ()/4., 800 - hitbox.getP2().getX()/4., 450 + hitbox.getP1().getZ()/4.);
-				//SDL_RenderDrawLineF(renderer, 800 - hitbox.getP2().getX()/4., 450 + hitbox.getP1().getZ()/4., 800 - hitbox.getP1().getX()/4., 450 + hitbox.getP1().getZ()/4.);
+				if (wall.isEnabled()){
+					SDL_SetRenderDrawColor(renderer,0,0,0,255);
+					SDL_RenderDrawLineF(renderer,800 - 5*(wall.getX1()), 450 + 5*(wall.getZ1()), 800 - 5*(wall.getX2()), 450 + 5*(wall.getZ2()));
+					//Rectangle hitbox = wall.getHitbox().getBox();
+					//SDL_RenderDrawLineF(renderer, 800 - hitbox.getP1().getX()/4., 450 + hitbox.getP1().getZ()/4., 800 - hitbox.getP1().getX()/4., 450 + hitbox.getP2().getZ()/4.);
+					//SDL_RenderDrawLineF(renderer, 800 - hitbox.getP1().getX()/4., 450 + hitbox.getP2().getZ()/4., 800 - hitbox.getP2().getX()/4., 450 + hitbox.getP2().getZ()/4.);
+					//SDL_RenderDrawLineF(renderer, 800 - hitbox.getP2().getX()/4., 450 + hitbox.getP2().getZ()/4., 800 - hitbox.getP2().getX()/4., 450 + hitbox.getP1().getZ()/4.);
+					//SDL_RenderDrawLineF(renderer, 800 - hitbox.getP2().getX()/4., 450 + hitbox.getP1().getZ()/4., 800 - hitbox.getP1().getX()/4., 450 + hitbox.getP1().getZ()/4.);
+				}
 			}
 			SDL_SetRenderDrawColor(renderer,0,0,0,255);
 			SDL_RenderDrawLineF(renderer,800 - 5*(player.getPx()),450 + 5*(player.getPz()),800 - 5*(player.getPx()),450 + 5*(player.getPz()));
